@@ -7,7 +7,7 @@ use think\Db;
 class Base
 {
     /**
-     * table 表名，不含表前缀
+     * table 表名，不含表前缀  ffff
      * map   查询条件
      * field 筛选字段
      * order_by 字段排序.
