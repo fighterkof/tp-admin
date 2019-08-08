@@ -1,0 +1,156 @@
+{include file='pub/base' /}
+<div class="x-nav">
+	<span class="layui-breadcrumb">
+	  <a href="">首页</a>
+	  <a href="">演示</a>
+	  <a>
+		<cite>导航元素</cite></a>
+	</span>
+	<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+	  <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-body ">
+					<form class="layui-form layui-col-space5" method="post" action="{:url('index')}">
+						<div class="layui-inline layui-show-xs-block">
+							<input type="text" name="keyword"  placeholder="请输入手机号" autocomplete="off" class="layui-input">
+						</div>
+						<div class="layui-inline layui-show-xs-block">
+							<button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+						</div>
+					</form>
+				</div>
+				<div class="layui-card-body ">
+					<table class="layui-table layui-form">
+					  <thead>
+						<tr>
+                            <th width="40">ID</th>
+							<th width="80">微信昵称</th>
+							<th width="80">微信头像</th>
+							<th width="100">姓名</th>
+							<th width="100">电话</th>
+							<th width="100">添加时间</th>
+							<th width="50">是否设置</th>
+							<th width="80">操作</th>
+						</tr>
+					  </thead>
+					  <tbody>
+						{volist name='list' id='k'}
+							<tr>
+								<td>{$k.members_id}</td>
+								<td>{$k.nickname}</td>
+								<td>{$k.avatar}</td>
+								<td>{$k.user_name}</td>
+								<td>{$k.phone}</td>
+								<td>{$k['createtime']|date='Y-m-d H:i'}</td>
+								<td class="td-status" id="set_{$k.members_id}">
+									{if $k.status == 1}
+										<span class="layui-btn layui-btn-normal layui-btn-mini">
+											家长会员
+										</span>
+										<span style="background-color:#a2a2a2" class="layui-btn layui-btn-danger layui-btn-mini">
+											设置老师
+										</span>
+									{else}
+										{if $k.status_teacher == 1}
+											<span style="background-color:#a2a2a2" class="layui-btn layui-btn-danger layui-btn-mini">
+												设置家长
+											</span>
+											<span class="layui-btn layui-btn-normal layui-btn-mini">
+												老师会员
+											</span>
+										{else}
+											<span class="layui-btn layui-btn-danger layui-btn-mini" onClick="admin_set(this,{$k.members_id})">
+												设置家长
+											</span>
+											<span class="layui-btn layui-btn-danger layui-btn-mini" onClick="admin_teacher(this,{$k.members_id})">
+												设置老师
+											</span>
+										{/if}
+									{/if}
+									
+								</td>
+								<td class="td-manage">
+									<div class="btn-group">
+										<button type="button" class="layui-btn" onClick="admin_del(this,{$k.members_id})">删除</button>
+									</div>
+								</td>
+
+							</tr>
+						{/volist}
+					  </tbody>
+					</table>
+				</div>
+				<div class="page">{$page|raw}</div>
+			</div>
+		</div>
+	</div>
+</div> 
+
+<script type="text/javascript">
+
+	function admin_set(obj,id){
+		$.ajax({
+			type: 'POST',
+			url: '{:url("ajaxSet")}?members_id=' + id + '',
+			dataType: 'json',
+			success: function (data) {
+				if (data.code == 0) {
+					$("#set_"+id).html('<span class="layui-btn layui-btn-normal layui-btn-mini">家长会员</span><span style="background-color:#a2a2a2" class="layui-btn layui-btn-danger layui-btn-mini">设置老师</span>');
+				}
+				layer.msg(data.msg, { icon: 1, time: 2000 });
+			},
+			error: function (data) {
+				console.log(data.msg);
+			},
+		});
+	}
+
+	function admin_teacher(obj,id){
+		$.ajax({
+			type: 'POST',
+			url: '{:url("ajaxTeacher")}?members_id=' + id + '',
+			dataType: 'json',
+			success: function (data) {
+				if (data.code == 0) {
+					$("#set_"+id).html('<span style="background-color:#a2a2a2" class="layui-btn layui-btn-normal layui-btn-mini">设置家长</span><span class="layui-btn layui-btn-normal layui-btn-mini">老师会员</span>');
+				}
+				layer.msg(data.msg, { icon: 1, time: 2000 });
+			},
+			error: function (data) {
+				console.log(data.msg);
+			},
+		});
+	}
+
+	/*管理员-删除*/
+	function admin_del(obj, id) {
+		layer.confirm('请确认删除?', function (index) {
+
+			$.ajax({
+				type: 'POST',
+				url: '{:url("delete")}?members_id=' + id + '',
+				dataType: 'json',
+				success: function (data) {
+					if (data.code == 0) {
+						$(obj).parents("tr").remove();
+					}
+					layer.msg(data.msg, { icon: 1, time: 2000 });
+				},
+				error: function (data) {
+					console.log(data.msg);
+				},
+			});
+
+		});
+	}
+
+
+
+</script>
+</body>
+
+</html>

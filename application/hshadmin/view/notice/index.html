@@ -1,0 +1,100 @@
+{include file='pub/base' /}
+<div class="x-nav">
+	<span class="layui-breadcrumb">
+	  <a href="">首页</a>
+	  <a href="">演示</a>
+	  <a>
+		<cite>导航元素</cite></a>
+	</span>
+	<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+	  <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-body ">
+					<form class="layui-form layui-col-space5" method="post" action="{:url('index')}">
+						<div class="layui-inline layui-show-xs-block">
+							<input type="text" name="keyword"  placeholder="请输入标题" autocomplete="off" class="layui-input">
+						</div>
+						<div class="layui-inline layui-show-xs-block">
+							<button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+						</div>
+					</form>
+				</div>
+				<div class="layui-card-header">
+					<button class="layui-btn" onclick="xadmin.open('添加公告','{:url(\'Add\')}',1050,800,true)"><i class="layui-icon"></i>添加</button>
+				</div>
+				<div class="layui-card-body ">
+					<table class="layui-table layui-form">
+					  <thead>
+						<tr>
+							<th width="40">ID</th>
+							<th width="150">标题</th>
+							<th width="150">类型</th>
+							<th width="100">显示时间</th>
+							<th width="100">添加时间</th>
+							<th width="100">是否推荐</th>
+							<th width="150">操作</th>
+					  </thead>
+					  <tbody>
+						{volist name='list' id='k'}
+							<tr>
+								<td>{$k.notice_id}</td>
+								<td>{$k.title}</td>
+								<td>{eq name='$k.type' value = '1'}活动{else/}通知{/eq}</td>
+								<td>{$k['show_time']|date='Y-m-d'}</td>
+								<td>{$k['createtime']|date='Y-m-d H:i'}</td>
+								<td class="td-status">
+									<span class="layui-btn {eq name='$k.status' value='1'}layui-btn-normal{else/}layui-btn-danger{/eq} layui-btn-mini">
+										{eq name='$k.status' value='1'}已推荐{else/}未推荐{/eq}
+									</span></td>
+								<td class="td-manage">
+									<div class="btn-group">
+										<button type="button" class="layui-btn" onclick="xadmin.open('修改','{:url(\'edit\',[\'notice_id\'=>$k.notice_id])}',1050,800,true)">修改</button>
+										<button type="button" class="layui-btn" onClick="admin_del(this,{$k.notice_id})">删除</button>
+									</div>
+								</td>
+
+							</tr>
+						{/volist}
+					  </tbody>
+					</table>
+				</div>
+				<div class="page">{$page|raw}</div>
+			</div>
+		</div>
+	</div>
+</div> 
+
+<script type="text/javascript">
+
+	/*管理员-删除*/
+	function admin_del(obj, id) {
+		layer.confirm('请确认删除?', function (index) {
+
+			$.ajax({
+				type: 'POST',
+				url: '{:url("delete")}?notice_id=' + id + '',
+				dataType: 'json',
+				success: function (data) {
+					if (data.code == 0) {
+						$(obj).parents("tr").remove();
+					}
+					layer.msg(data.msg, { icon: 1, time: 2000 });
+				},
+				error: function (data) {
+					console.log(data.msg);
+				},
+			});
+
+		});
+	}
+
+
+
+</script>
+</body>
+
+</html>

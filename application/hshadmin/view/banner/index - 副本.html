@@ -1,0 +1,109 @@
+{include file='pub/base' /}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 广告管理 <span
+		class="c-gray en">&gt;</span> Banner <a class="btn btn-success radius r"
+		style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新"><i
+			class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<form class="mb-20" method="post" action="{:url('index')}">
+		<div class="codeView docs-example2">
+			<div class="row-demo">
+				<div class="row cl _sx">
+					<div class="col-xs-12 col-sm-2 col-md-2 col-lg-1 sx_right">标题：</div>
+					<div class="col-xs-12 col-sm-10 col-md-10 col-lg-11 ">
+						<input type="text" name='keyword' class="input-text" value="{:input('keyword')}"
+							style="width:250px" placeholder="输入搜索标题">
+						<button type="submit" class="btn btn-success" id="" name=""><i class="Hui-iconfont">&#xe665;</i>
+							搜索</button>
+						<a href="javascript:;" onclick="layer_show('添加Banner','{:url('Add')}','1080','700')"
+							class="btn btn-primary radius">
+							<i class="Hui-iconfont">&#xe600;</i> 添加Banner</a>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</form>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr class="text-c">
+				<th width="40">ID</th>
+				<th width="150">标题</th>
+				<th width="150">图片</th>
+				<th width="130">链接路径</th>
+				<th width="130">位置</th>
+				<th width="100">开始时间</th>
+				<th width="100">结束时间</th>
+				<th width="100">创建时间</th>
+				<th width="100">是否已启用</th>
+				<th width="150">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			{volist name='list' id='k'}
+			<tr class="text-c">
+				<td>{$k.banner_id}</td>
+				<td>{$k.ad_name}</td>
+				<td><img src="{$k.image}" width="150" /></td>
+				<td>
+					{$k.ad_link}
+					<br />
+					{$k.mini_app_link}
+				</td>
+				<td>1</td>
+				<td>{$k.start_time}</td>
+				<td>{$k.end_time}</td>
+				<td>{$k['createtime']|date='Y-m-d H:i'}</td>
+
+				<td class="td-status">
+					<span class="label {eq name='$k.status' value='1'}label-success{else/}label-default{/eq} radius">
+						{eq name='$k.status' value='1'}已启用{else/}已禁用{/eq}
+					</span></td>
+				<td class="td-manage">
+
+					<div class="btn-group">
+						<span class="btn  radius size-S"
+							onclick="layer_show('修改','{:url('edit',['banner_id'=>$k.banner_id])}','1080','700')">修改</span>
+						<span class="btn  radius size-S" onclick="admin_del(this,'{$k.banner_id}')">删除</span>
+					</div>
+				</td>
+
+			</tr>
+			{/volist}
+
+		</tbody>
+	</table>
+	<div class="page">{$page|raw}</div>
+
+</div>
+
+<script type="text/javascript">
+
+	/*管理员-删除*/
+	function admin_del(obj, id) {
+		layer.confirm('请确认删除?', function (index) {
+
+			$.ajax({
+				type: 'POST',
+				url: '{:url("delete")}?banner_id=' + id + '',
+				dataType: 'json',
+				success: function (data) {
+					if (data.code == 0) {
+						$(obj).parents("tr").remove();
+					}
+					layer.msg(data.msg, { icon: 1, time: 2000 });
+				},
+				error: function (data) {
+					console.log(data.msg);
+				},
+			});
+
+		});
+	}
+
+
+
+</script>
+</body>
+
+</html>

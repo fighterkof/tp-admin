@@ -1,0 +1,141 @@
+{include file='pub/base' /}
+<div class="layui-fluid">
+	<div class="layui-row">
+		{present name="info.notice_id"}
+			<form  class="layui-form" action="{:url('/hshadmin/Notice/edit')}" method="post" name="form" id="form">
+			<input type="hidden" name="notice_id" value="{:isset($info.notice_id)?$info.notice_id:''}">
+		{else /}
+			<form  class="layui-form" action="{:url('/hshadmin/Notice/add')}" method="post" name="form" id="form">
+		{/present}
+			<div class="layui-form-item">
+				<label class="layui-form-label">类型：</label>
+				<div class="layui-input-block">
+					<input type="radio" class="radio" value="1" name="type" title="活动" id="type1" checked >
+					<input type="radio" class="radio" value="2" name="type" title="通知" id="type2" >
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="title" class="layui-form-label">标题：</label>
+				<div class="layui-input-block">
+					<input type="text" id="title" name="title" value="{:isset($info.title)?$info.title:''}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="show_time" class="layui-form-label">显示时间：</label>
+				<div class="layui-input-block">
+					{present name="info.notice_id"}
+					<input type="text" id="show_time" name="show_time" value="{:isset($info.show_time)?$info.show_time:''}" autocomplete="off" class="layui-input">
+					{else}
+					<input type="text" id="show_time" name="show_time" value="<?php echo date('Y-m-d')?>" autocomplete="off" class="layui-input">
+					{/present}
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="displayorder" class="layui-form-label">排序：</label>
+				<div class="layui-input-block">
+					<input type="text" id="displayorder" name="displayorder" value="{:isset($info.displayorder)?$info.displayorder:''}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_repass" class="layui-form-label">是否推荐：</label>
+				<div class="layui-input-block">
+					<input type="radio" class="radio" value="1" name="status" title="推荐" id="status1" lay-filter="switchTest">
+					<input type="radio" class="radio" value="0" name="status" title="不推荐" id="status2" lay-filter="switchTest" checked>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="displayorder" class="layui-form-label">内 容：</label>
+				<div class="layui-input-block">
+					{:tpl_ueditor('content',isset($info.content)?$info.content:'')}
+				</div>
+			</div>
+			<div class="layui-form-item" id="ash">
+				<label for="L_repass" class="layui-form-label">
+				</label>
+				<button class="layui-btn" lay-filter="add" lay-submit="">保 存</button>
+				<!-- <input type="reset" class="layui-btn" value="重置"> -->
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	$(function () {
+
+		$("[name='status'][value='{$info.status ?? ''}']").attr("checked", true);
+
+		layui.use(['laydate','form'], function(){
+			var laydate = layui.laydate;
+			var form = layui.form;
+			
+			//执行一个laydate实例
+			laydate.render({
+			elem: '#show_time' //指定元素
+			});
+		});
+	});
+</script>
+<script>
+	layui.use(['form', 'layer'],
+		function() {
+		$ = layui.jquery;
+		var form = layui.form,
+		layer = layui.layer;
+		
+		form.on('radio(switchTest)', function(data){
+			//console.log(data.elem); //得到radio原始DOM对象
+			//console.log(data.value); //被点击的radio的value值7777
+			if(data.value == 1){
+				var url = "{:url('Notice/ajaxRecommend')}";
+				var data = {};
+				$.ajax({
+					type : "GET",
+					url : url,
+					data : data,
+					dataType : "json",
+					success : function(res){
+						if(res.code == 0){
+							layer.alert(res.msg);
+							$("#ash").html('<label for="L_repass" class="layui-form-label"></label><span style="background-color:#b1b1b1" class="layui-btn">保 存</span>')
+						}
+					}
+				});
+			}else{
+				$("#ash").html('<label for="L_repass" class="layui-form-label"></label><button  class="layui-btn" lay-filter="add" lay-submit="">保 存</button>')
+			}
+		});  
+		
+		//监听提交
+		form.on('submit(add)',
+			function (data) {
+			//console.log(data);
+			//发异步，把数据提交给php
+			form_action=data.form.action;
+			$.ajax({
+				type: 'post',
+				url: form_action,
+				data: data.field,
+				success: function (obj) {
+					if(obj.code=='0'){
+
+						layer.alert(obj.msg, {
+							icon: 6
+						},
+						function() {
+							//关闭当前frame
+							xadmin.close();
+
+							// 可以对父窗口进行刷新 
+							xadmin.father_reload();
+						});
+					}else{
+						layer.msg(obj.msg);
+					}
+				}
+			});
+			return false;
+		});
+
+	});
+</script>
+{include file='pub/footer'}

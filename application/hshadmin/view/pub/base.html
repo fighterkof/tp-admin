@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+  <meta charset="UTF-8">
+  <title>斑奇小程序后台</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+    content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+  <link rel="stylesheet" href="__STATIC__/xadmin/css/font.css">
+  <link rel="stylesheet" href="__STATIC__/xadmin/css/xadmin.css">
+  <link rel="stylesheet" href="__STATIC__/xadmin/css/hsh.css">
+  <script type="text/javascript" src="__STATIC__/xadmin/lib/layui/layui.js" charset="utf-8"></script>
+  <script type="text/javascript" src="__STATIC__/xadmin/js/xadmin.js"></script>
+  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  
+  <!--[if lt IE 9]>
+          <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+          <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+  <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+  <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="__STATIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+  <script type="text/javascript">
+    var url = "{:url('Ueditor/index')}";
+    var _editor;
+    var b = "";
+    $(function () {
+      //重新实例化一个编辑器，防止在上面的editor编辑器中显示上传的图片或者文件
+      _editor = UE.getEditor('upload_ue', { serverUrl: url });
+      _editor.ready(function (e) {
+        //设置编辑器不可用
+        _editor.setDisabled();
+        //隐藏编辑器，因为不会用到这个编辑器实例，所以要隐藏
+        _editor.hide();
+        //侦听图片上传
+        _editor.addListener('beforeInsertImage', function (t, arg) {
+          //将地址赋值给相应的input,只去第一张图片的路径
+          $("#" + b).val(arg[0].src);
+          console.log(arg);
+          //图片预览
+          //$("#preview").attr("src", arg[0].src);
+        })
+        //侦听文件上传，取上传文件列表中第一个上传的文件的路径
+        _editor.addListener('afterUpfile', function (t, arg) {
+                  console.log(arg);
+          $("#" + b).val(arg[0].url);
+        })
+      });
+    });
+  </script>
+</head>
+<body>
+    <script type="text/plain" id="upload_ue"></script>
+    <script type="text/javascript">
+      //弹出图片上传的对话框
+      function upImage(id) {
+        var myImage = _editor.getDialog("insertimage");
+        myImage.open();
+        b = id;
+      }
+      //弹出文件上传的对话框
+      function upFiles(id) {
+        var myFiles = _editor.getDialog("attachment");
+        myFiles.open();
+        b = id;
+      }
+    </script>

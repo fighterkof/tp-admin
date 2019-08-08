@@ -1,0 +1,45 @@
+{include file='pub/base' /}
+<div class="layui-fluid">
+
+	<table  class="layui-table" lay-size="lg">
+		<colgroup>
+			<col width="150">
+		</colgroup>
+		<thead>
+			<tr>
+				<th colspan="2">查看个人资料</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>用户名称：</td>
+				<td>{:isset($info.username)?$info.username:''}</td>
+
+			</tr>
+			<tr>
+				<td>手机电话：</td>
+				<td>{:isset($info.tel)?$info.tel:''}</td>
+
+			</tr>
+			<tr>
+				<td>电子邮箱：</td>
+				<td>{:isset($info.mail)?$info.mail:''}</td>
+
+			</tr>
+			<tr>
+				<td>用户角色：</td>
+				<td>{:get_rolename($info.role)}</td>
+			</tr>
+			<tr>
+				<td>用户状态：</td>
+				<td>{eq name='$info.status' value='1'}已启用{else/}关闭{/eq}</td>
+			</tr>
+			<tr>
+				<td>备注说明：</td>
+				<td>{:isset($info.remark)?$info.remark:''}</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
+{include file='pub/base' /}

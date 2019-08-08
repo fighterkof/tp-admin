@@ -1,0 +1,72 @@
+{include file='pub/base' /}
+<div class="layui-fluid">
+    <form class="layui-form" action="{:url('/hshadmin/User/access_edit')}" method="post">
+        <input type="hidden" name="roleid" value="{$roleid}" />
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择权限</label>
+            <div class="layui-input-block">
+                <div id="LAY-auth-tree-index"></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" lay-submit lay-filter="LAY-auth-tree-submit">提交</button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<link rel="stylesheet" href="__STATIC__/xadmin/lib/layui/css/layui.css">
+<script type="text/javascript" src="__STATIC__/xadmin/lib/layui/layui.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+    layui.config({
+        base: '__STATIC__/xadmin/lib/layui/extends/',
+    }).extend({
+        authtree: 'authtree',
+    });
+    layui.use(['jquery', 'authtree', 'form', 'layer'], function () {
+        var $ = layui.jquery;
+        var authtree = layui.authtree;
+        var form = layui.form;
+        var layer = layui.layer;
+        // 初始化
+
+        var jsondata = {$array|raw};
+
+    authtree.render('#LAY-auth-tree-index', jsondata, {
+        inputname: 'nodeid[]'
+        , layfilter: 'lay-check-auth'
+        , autowidth: true
+    });
+    authtree.closeAll('#LAY-auth-tree-index');
+    authtree.showDept('#LAY-auth-tree-index', 3);
+
+
+
+    form.on('submit(LAY-auth-tree-submit)', function (obj) {
+        var authids = authtree.getChecked('#LAY-auth-tree-index');
+        //console.log('Choosed authids is', authids);
+        $.ajax({
+            type: 'post',
+            url: "{:url('/hshadmin/User/access_edit')}",
+            data: obj.field,
+            success: function (res) {
+                if (res.code == '0') {
+                    
+                    //xadmin.close();
+                    layer.alert(res.msg, function (index) {
+                        //do something
+
+                        xadmin.close();
+                    });
+                } else {
+                    layer.msg(res.msg);
+                }
+            }
+        });
+        return false;
+    });
+    });
+</script>
+{include file='pub/footer'}

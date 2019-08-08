@@ -1,0 +1,158 @@
+{include file='pub/base' /}
+<div class="layui-fluid">
+	<div class="layui-row">
+		{present name="info.id"}
+			<form class="layui-form" action="{:url('/hshadmin/User/edit')}" method="post" name="form" id="form">
+			<input type="hidden" name="id" value="{:isset($info.id)?$info.id:''}">
+		{else /}
+			<form class="layui-form" action="{:url('/hshadmin/User/add')}" method="post" name="form" id="form">
+		{/present}
+		<!-- <form class="layui-form"> -->
+			<div class="layui-form-item">
+				<label for="username" class="layui-form-label">
+					<span class="x-red">*</span>用户名称：
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="username" name="username" value="{:isset($info.username)?$info.username:''}" required="" lay-verify="required"
+					autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">
+					<span class="x-red">*</span>将会成为您唯一的登入名
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="password" class="layui-form-label">
+					<span class="x-red">*</span>密　　码：
+				</label>
+				<div class="layui-input-inline">
+					<input type="password" id="password" name="password"
+					autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">
+					6到16个字符
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="repassword" class="layui-form-label">
+					<span class="x-red">*</span>确认密码：
+				</label>
+				<div class="layui-input-inline">
+					<input type="password" id="repassword" name="repassword"
+					autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">
+					6到16个字符
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="tel" class="layui-form-label">
+					<span class="x-red">*</span>手机电话：
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="tel" name="tel" value="{:isset($info.tel)?$info.tel:''}" required="" lay-verify="required"
+					autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">
+					<span class="x-red">*</span>将会成为您唯一的登入名
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="mail" class="layui-form-label">
+					<span class="x-red">*</span>电子邮箱：
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="mail" name="mail" value="{:isset($info.mail)?$info.mail:''}" required="" lay-verify="required"
+					autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">
+					<span class="x-red">*</span>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					<span class="x-red">*</span>用户角色：
+				</label>
+				<div class="layui-input-inline">
+					<select name="role">
+						{volist name="role" id="vo"}
+							<option value="{$vo.id}" {eq name='$vo.id' value='1'}disabled{/eq}>{$vo.name}</option>
+						{/volist}
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="x-red">*</span>用户状态：</label>
+				<div class="layui-input-block">
+					<input type="radio" class="radio" value="1" name="status" title="启用" id="status1" checked >
+					<input type="radio" class="radio" value="0" name="status" title="关闭" id="status2" >
+				</div>
+			</div>
+			<div class="layui-form-item layui-form-text">
+				<label for="remark" class="layui-form-label">备注说明：</label>
+				<div class="layui-input-block">
+					<textarea placeholder="请输入内容" id="remark" name="remark" class="layui-textarea"></textarea>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_repass" class="layui-form-label">
+				</label>
+				{present name="info.id"}
+				<!-- <input class='layui-btn' type="submit" name="dosubmit" value="修 改" > -->
+				<button  class="layui-btn" lay-filter="add" lay-submit="">修 改</button>
+				{else/}
+				<!-- <input class='layui-btn' type="submit" name="dosubmit" value="添 加"> -->
+				<button  class="layui-btn" lay-filter="add" lay-submit="">添 加</button>
+				{/present}
+				<!-- <button  class="layui-btn" lay-filter="add" lay-submit=""> 增加 </button> -->
+			</div>
+		</form>
+	</div>
+</div>
+<script>
+layui.use(['form', 'layer'],
+	function() {
+		$ = layui.jquery;
+		var form = layui.form,
+		layer = layui.layer;
+
+		
+		//监听提交
+		form.on('submit(add)',
+			function (data) {
+			//console.log(data);
+			//发异步，把数据提交给php
+			form_action=data.form.action;
+			$.ajax({
+				type: 'post',
+				url: form_action,
+				data: data.field,
+				success: function (obj) {
+					console.log(obj);
+					if(obj.code=='0'){
+						layer.alert(obj.msg, {
+							icon: 6
+						},
+						function() {
+							//关闭当前frame
+							xadmin.close();
+
+							// 可以对父窗口进行刷新 
+							xadmin.father_reload();
+						});
+					}else{
+						layer.msg(obj.msg);
+					}
+				}
+			});
+			return false;
+		});
+
+	});
+</script>
+<script>
+$(function () {
+        $("[name='status'][value='{$info.status ?? ''}']").attr("checked",true);
+		$("[name='role']").find("[value='{$info.role ?? '0'}']").attr("selected",true);
+    })
+</script>
+{include file='pub/footer' /}

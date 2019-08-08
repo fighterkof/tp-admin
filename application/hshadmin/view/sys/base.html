@@ -1,0 +1,185 @@
+{include file='pub/base' /}
+  <link rel="stylesheet" href="__LIB__/multiple-select/multiple-select.css" />
+<title>基本设置</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+	<span class="c-gray en">&gt;</span>
+	系统管理
+	<span class="c-gray en">&gt;</span>
+	基本设置
+	<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+</nav>
+<div class="page-container">
+	<form class="form form-horizontal" action='{:url("base")}' method="post" id="form-article-add">
+		<div id="tab-system" class="HuiTab">
+			<div class="tabBar cl">
+				<span>基本设置</span>
+				<span>相关配置</span>
+			</div>
+			<div class="tabCon">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">
+						<span class="c-red">*</span>
+						公司名称:</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input name='sys[name]' type="text" style='width:50%'  placeholder="请填写公司名称（简称或全称都可）" value="{$sys.name}" class="input-text">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">
+						<span class="c-red">*</span>
+						系统名称:</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input name='sys[sysname]' type="text" style='width:50%'  placeholder="请填写公司系统名称" value="{$sys.sysname}" class="input-text">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">
+						<span class="c-red">*</span>
+						系统版本:</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input name='sys[sysv]' type="text" style='width:50%'  placeholder="请填写系统版本，如V1.0" value="{$sys.sysv}" class="input-text">
+					</div>
+				</div>
+				
+				
+				
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">
+						<span class="c-red">*</span>
+						底部版权信息：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input name='sys[copy]' type="text" style='width:50%'  placeholder="&copy; 2017" value="{$sys.copy}" class="input-text">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">备案号：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input name='sys[icp]' type="text" style='width:50%'  placeholder="京ICP备00000000号" value="{$sys.icp}" class="input-text">
+					</div>
+				</div>
+				
+			</div>
+			<div class="tabCon">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">
+						<span class="c-red">*</span>
+						页面数量:</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input name='ctrl[pagenum]' type="text" style='width:50%' placeholder="控制每页显示的条数" value="{$ctrl.pagenum}" class="input-text">
+					</div>
+				</div>
+				
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">
+						<span class="c-red">*</span>
+						权限控制:</label>
+					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+					<div class="radio-box" >
+						<input type="radio" id="radio-1" name="ctrl[rbac]" {$ctrl.rbac==1 ? 'checked' : ''} value='1'>
+						<label for="radio-1">开</label>
+					  </div>
+					  <div class="radio-box">
+						<input type="radio" id="radio-2" name="ctrl[rbac]" {$ctrl.rbac==0 ? 'checked' : ''} value='0'>
+						<label for="radio-2">关</label>
+					  </div>
+					</div>
+				</div>
+			</div>
+			
+			
+			
+		</div>
+			
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<button  class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+				
+			</div>
+		</div>
+	</form>
+</div>
+<script src="__LIB__/multiple-select/multiple-select.js"></script>
+<script type="text/javascript">
+
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	$("[name='ctrl[cj]'][value='{$ctrl.cj ?? ''}']").attr("checked",true);
+	$("[name='ctrl[ischeck]'][value='{$ctrl.ischeck ?? ''}']").attr("checked",true);
+	$("[name='ctrl[rbac]'][value='{$ctrl.rbac ?? ''}']").attr("checked",true);
+	$("#tab-system").Huitab({
+		index:0
+	});
+});
+$(function() {
+        $('#sh').change(function() {
+			$('#shv').val($(this).val());
+        }).multipleSelect({
+            width: '100%'
+        });
+    });
+$(function() {
+        $('#paper').change(function() {
+			$('#paperv').val($(this).val());
+        }).multipleSelect({
+            width: '100%'
+        });
+    });
+$(function() {
+        $('#bzj').change(function() {
+			$('#bzjv').val($(this).val());
+        }).multipleSelect({
+            width: '100%'
+        });
+    });
+$(function() {
+        $('#cntsh').change(function() {
+			$('#cntshv').val($(this).val());
+        }).multipleSelect({
+            width: '100%'
+        });
+    });
+$(function() {
+        $('#cntcd').change(function() {
+			$('#cntcdv').val($(this).val());
+        }).multipleSelect({
+            width: '100%'
+        });
+    });
+$(function() {
+        $('#cntgz').change(function() {
+			$('#cntgzv').val($(this).val());
+        }).multipleSelect({
+            width: '100%'
+        });
+    });
+$(function() {
+        $('#cgsh').change(function() {
+			$('#cgshv').val($(this).val());
+        }).multipleSelect({
+            width: '100%'
+        });
+    });
+$(function() {
+        $('#cgcd').change(function() {
+			$('#cgcdv').val($(this).val());
+        }).multipleSelect({
+            width: '100%'
+        });
+    });
+$(function() {
+        $('#cggz').change(function() {
+			$('#cggzv').val($(this).val());
+        }).multipleSelect({
+            width: '100%'
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{include file='pub/base' /}
+<div class="page-container">
+	<body>
+		{present name="info.id"}
+		<form action="{:url('/hshadmin/News/edit')}" method="post" name="form" id="form">
+			<input type="hidden" name="id" value="{:isset($info.id)?$info.id:''}">
+			{else /}
+			<form action="{:url('/hshadmin/News/add')}" method="post" name="form" id="form">
+				{/present}
+				<table class="table table-border table-bordered table-hover table-bg">
+					<tr class="text-c">
+						<td colspan="4">{present name="info.id"}修改{else/}添加{/present}文章</td>
+					</tr>
+					<tr class="tr rt">
+						<td style="width:300px">标题：</td>
+						<td colspan="3" class="lt">
+							<input type="text" name="username" class='input-text'
+								value="{:isset($info.username)?$info.username:''}" datatype="*">
+						</td>
+					</tr>
+					<tr class="tr rt">
+						<td>标题：</td>
+						<td colspan="3" class="lt">
+							{:UploadImage('uploadfile')}
+						</td>
+					</tr>
+					<tr class="tr rt">
+						<td>标题：</td>
+						<td colspan="3" class="lt">
+							{:UploadImage('uploadfile2')}
+						</td>
+					</tr>
+					<tr class="tr rt">
+						<td>内 容：</td>
+						<td colspan="3" class="lt">
+							{:tpl_ueditor('article_content')}
+						</td>
+					</tr>
+					<tr class="tr rt">
+						<td>用户状态：</td>
+						<td colspan="3" class="lt">
+							<input type="radio" class="radio" value="1" name="status" id="status1" checked>
+							启用
+							<input type="radio" class="radio" value="0" name="status" id="status2">
+							关闭
+						</td>
+					</tr>
+					<tr class="tr lt">
+						<td colspan="4" class='text-c'>
+							{present name="info.id"}
+							<input class='btn btn-primary radius' type="submit" name="dosubmit" value="修 改">
+							{else/}
+							<input class='btn btn-primary radius' type="submit" name="dosubmit" value="添 加">
+							{/present}
+							&nbsp;
+							<input class='btn btn-primary radius' type="button" onclick="layer_close()" value="返 回">
+						</td>
+					</tr>
+				</table>
+			</form>
+
+</div>
+
+<script type="text/javascript">
+	//弹出图片上传的对话框
+	function upImage(id) {
+		var myImage = _editor.getDialog("insertimage");
+		myImage.open();
+		b = id;
+	}
+	//弹出文件上传的对话框
+	function upFiles(id) {
+		var myFiles = _editor.getDialog("attachment");
+		myFiles.open();
+		b = id;
+	}
+</script>
+<script>
+	$(function () {
+		$("[name='status'][value='{$info.status ?? ''}']").attr("checked", true);
+
+		$("#form").Validform({
+			tiptype: 2,
+			ajaxPost: true,
+			showAllError: true,
+			callback: function (ret) {
+				ajax_progress(ret);
+			}
+		});
+	})
+</script>
+</body>
+
+</html>

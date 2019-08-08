@@ -1,0 +1,89 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico" >
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="__HUI__/css/H-ui.min.css" />
+
+<link rel="stylesheet" type="text/css" href="__HUIADMIN__/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="__LIB__/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__HUIADMIN__/skin/blue/skin.css" id="blue" />
+<link rel="stylesheet" type="text/css" href="__HUIADMIN__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__HUIADMIN__/common.css" />
+<link rel="stylesheet" type="text/css" href="__STATIC__/hshadmin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<script type="text/javascript" src="__LIB__/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="__LIB__/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="__HUI__/js/H-ui.min.js"></script>
+<script type="text/javascript" src="__HUIADMIN__/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="__LIB__/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="__HUIADMIN__/common.js"></script>
+<script type="text/javascript" src="__LIB__/laydate5.0.9/laydate.js"></script>
+
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="__STATIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<link rel="stylesheet" href="__STATIC__/font_1117267_duiix56mjcf/iconfont.css">
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<title>{$Think.config.sys.name}</title>
+
+<script type="text/javascript">
+	var url = "{:url('Ueditor/index')}";
+	var _editor;
+	var b = "";
+	$(function () {
+		//重新实例化一个编辑器，防止在上面的editor编辑器中显示上传的图片或者文件
+		_editor = UE.getEditor('upload_ue', { serverUrl: url });
+		_editor.ready(function (e) {
+			//设置编辑器不可用
+			_editor.setDisabled();
+			//隐藏编辑器，因为不会用到这个编辑器实例，所以要隐藏
+			_editor.hide();
+			//侦听图片上传
+			_editor.addListener('beforeInsertImage', function (t, arg) {
+				//将地址赋值给相应的input,只去第一张图片的路径
+				$("#" + b).val(arg[0].src);
+				console.log(arg);
+				//图片预览
+				//$("#preview").attr("src", arg[0].src);
+			})
+			//侦听文件上传，取上传文件列表中第一个上传的文件的路径
+			_editor.addListener('afterUpfile', function (t, arg) {
+                console.log(arg);
+				$("#" + b).val(arg[0].url);
+			})
+		});
+	});
+</script>
+
+</head>
+<body>
+<script type="text/plain" id="upload_ue"></script>
+<script type="text/javascript">
+	//弹出图片上传的对话框
+	function upImage(id) {
+		var myImage = _editor.getDialog("insertimage");
+		myImage.open();
+		b = id;
+	}
+	//弹出文件上传的对话框
+	function upFiles(id) {
+		var myFiles = _editor.getDialog("attachment");
+		myFiles.open();
+		b = id;
+	}
+</script>

@@ -1,0 +1,108 @@
+{include file='pub/base' /}
+<div class="layui-fluid">
+	<div class="layui-row">
+            <form  class="layui-form" action="{:url('/hshadmin/Members/studentadd')}" method="post" name="form" id="form">
+                <input type="hidden" name="parent_id" value="{:isset($parent_id)?$parent_id:''}">
+			<div class="layui-form-item">
+				<label for="student_name" class="layui-form-label"><span class="x-red">*</span>学员姓名：</label>
+				<div class="layui-input-inline">
+					<input type="text" id="student_name" name="student_name" required="" value="{:isset($info.student_name)?$info.student_name:''}" lay-verify="required" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<!-- <div class="layui-form-item">
+				<label for="phone" class="layui-form-label"><span class="x-red">*</span>头像：</label>
+                    {:UploadImage('image',isset($info.image)?$info.image:'')}
+                    <img src="" alt="">
+				<div class="layui-form-mid layui-word-aux">
+					<span class="x-red">*</span>注：单图大小不超过5m，建议规格：750*375
+				</div>
+			</div> -->
+
+			<div class="layui-form-item">
+				<label class="layui-form-label">年龄：</label>
+				<div class="layui-input-inline">
+					<input type="text" id="age" name="age" value="{:isset($info.age)?$info.age:''}" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="sex" class="layui-form-label">性别：</label>
+				<div class="layui-input-inline">
+					<input type="text" id="sex" name="sex" value="{:isset($info.sex)?$info.sex:''}" autocomplete="off" class="layui-input">
+				</div>
+            </div>
+            <div class="layui-form-item">
+				<label for="birthday" class="layui-form-label">生日：</label>
+				<div class="layui-input-inline">
+					<input type="text" id="birthday" name="birthday" value="<?php echo date('Y-m-d') ?>" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_repass" class="layui-form-label">
+				</label>
+					<button  class="layui-btn" lay-filter="add" lay-submit="">添 加</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	$(function () {
+		// $(".select").change(function () {
+		// 	var path = $(this).val();
+		// 	console.log($(this).val());
+		// 	$(this).parent().parent().find('input').val(path);
+		// });
+		$("[name='status'][value='{$info.status ?? ''}']").attr("checked", true);
+
+		layui.use(['laydate','form'], function(){
+			var laydate = layui.laydate;
+			var form = layui.form;
+			
+			//执行一个laydate实例
+			laydate.render({
+			elem: '#birthday' //指定元素
+			});
+		});
+	});
+</script>
+<script>
+	layui.use(['form', 'layer'],
+		function() {
+		$ = layui.jquery;
+		var form = layui.form,
+		layer = layui.layer;
+		
+		//监听提交
+		form.on('submit(add)',
+			function (data) {
+			//console.log(data);
+			//发异步，把数据提交给php
+			form_action=data.form.action;
+			$.ajax({
+				type: 'post',
+				url: form_action,
+				data: data.field,
+				success: function (obj) {
+					if(obj.code=='0'){
+
+						layer.alert(obj.msg, {
+							icon: 6
+						},
+						function() {
+							//关闭当前frame
+							xadmin.close();
+
+							// 可以对父窗口进行刷新 
+							xadmin.father_reload();
+						});
+					}else{
+						layer.msg(obj.msg);
+					}
+				}
+			});
+			return false;
+		});
+
+	});
+</script>
+{include file='pub/footer'}

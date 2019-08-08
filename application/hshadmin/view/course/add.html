@@ -1,0 +1,95 @@
+{include file='pub/base' /}
+<div class="layui-fluid">
+	<div class="layui-row">
+		{present name="info.course_id"}
+			<form  class="layui-form" action="{:url('/hshadmin/Course/edit')}" method="post" name="form" id="form">
+			<input type="hidden" name="course_id" value="{:isset($info.course_id)?$info.course_id:''}">
+		{else /}
+            <form  class="layui-form" action="{:url('/hshadmin/Course/add')}" method="post" name="form" id="form">
+            <input type="hidden" name="parent_id" value="{:isset($course_id)?$course_id:''}">
+		{/present}
+			<div class="layui-form-item">
+				<label for="course_title" class="layui-form-label"><span class="x-red">*</span>课程名称：</label>
+				<div class="layui-input-inline">
+					<input type="text" id="course_title" name="course_title" required="" value="{:isset($info.course_title)?$info.course_title:''}" lay-verify="required" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="phone" class="layui-form-label"><span class="x-red">*</span>图像：</label>
+					{:UploadImage('image',isset($info.image)?$info.image:'')}
+				<div class="layui-form-mid layui-word-aux">
+					<span class="x-red">*</span>注：单图大小不超过5m，建议规格：340*200
+				</div>
+            </div>
+            <div class="layui-form-item" {if $info.hierarchy == 2 || $info.hierarchy == 3} {else}style="display: none"{/if}>
+				<label for="displayorder" class="layui-form-label">内 容：</label>
+				<div class="layui-input-block">
+					{:tpl_ueditor('content',isset($info.content)?$info.content:'')}
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_repass" class="layui-form-label">
+				</label>
+				{present name="info.course_id"}
+					<button  class="layui-btn" lay-filter="add" lay-submit="">修 改</button>
+				{else /}
+					<button  class="layui-btn" lay-filter="add" lay-submit="">添 加</button>
+				{/present}
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	$(function () {
+		
+	});
+</script>
+<script>
+	layui.use(['form', 'layer'],
+		function() {
+		$ = layui.jquery;
+		var form = layui.form,
+		layer = layui.layer;
+		
+		form.on('select(switchTest)', function (data) {
+			//console.log(data.elem); //得到select原始DOM对象
+			//console.log(data.value); //得到被选中的值
+			//console.log(data.othis); //得到美化后的DOM对象
+			$("#mini_app_link").val(data.value);
+		});
+		
+		//监听提交
+		form.on('submit(add)',
+			function (data) {
+			//console.log(data);
+			//发异步，把数据提交给php
+			form_action=data.form.action;
+			$.ajax({
+				type: 'post',
+				url: form_action,
+				data: data.field,
+				success: function (obj) {
+					if(obj.code=='0'){
+
+						layer.alert(obj.msg, {
+							icon: 6
+						},
+						function() {
+							//关闭当前frame
+							xadmin.close();
+
+							// 可以对父窗口进行刷新 
+							xadmin.father_reload();
+						});
+					}else{
+						layer.msg(obj.msg);
+					}
+				}
+			});
+			return false;
+		});
+
+	});
+</script>
+{include file='pub/footer'}

@@ -1,0 +1,89 @@
+{include file='pub/base' /}
+<div class="x-nav">
+    <span class="layui-breadcrumb">
+      <a href="">系统设定</a>
+      <a href="">权限管理</a>
+      <a>
+        <cite>菜单管理</cite></a>
+    </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+      onclick="location.reload()" title="刷新">
+      <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+  </div>
+  <div class="layui-fluid">
+      <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+          <div class="layui-card">
+            
+            <div class="layui-card-header">
+              <button class="layui-btn" onclick="xadmin.open('添加用户','{:url(\'add\')}')"><i
+                  class="layui-icon"></i>添加菜单(节点)</button>
+            </div>
+            <div class="layui-card-body ">
+                <form action="{:url('Node/sort')}" method="post" name="form">
+  
+                  <script type="text/javascript" src="__LIB__/treetable/jquery.min.js"></script>
+                  <script type="text/javascript" src="__LIB__/treetable/jquery.treetable.js"></script>
+                  <link rel='stylesheet' type='text/css' href='__LIB__/treetable/css/jquery.treeTable.css' />
+                 <table id="tree"class="layui-table layui-form"  lay-size="lg">
+                    
+                        <tr class="text-c">
+                          <th width="150">排序权重</th>
+                          <th width="30">ID</th>
+                          <th >菜单名称</th>
+                          <th width="70">类型</th>
+                          <th width="70">状态</th>
+                          <th width="70">显示</th>
+                          <th width="200">管理操作<a id='aaa'></a></th>
+                        </tr>
+                        {$html_tree|raw}
+                        <tr class="tr">
+                          <td colspan="7" valign="middle">
+                            <input  type="submit" value="更新排序" class="layui-btn" />
+                          </td>
+                        </tr>
+                    </table>
+                  </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  {include file='pub/footer' /}
+
+<script>
+/*管理员-删除*/
+function admin_del(obj,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '{:url("del")}?id='+id+'',
+			dataType: 'json',
+			success: function(data){
+				if(data.code==0){
+					$(obj).parents("tr").remove();
+				}
+				layer.msg(data.msg,{icon:1,time:1000});
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+}
+
+</script>
+<script type="text/javascript">
+  $(document).ready(function() {
+  	//树配置
+    $("#tree").treeTable({
+		indent: 20, 
+    	expandable: true,
+    });
+	 $("#node-1 a.expander").trigger('click'); 
+   });
+  
+</script>

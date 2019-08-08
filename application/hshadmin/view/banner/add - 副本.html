@@ -1,0 +1,284 @@
+{include file='pub/base' /}
+<link rel="stylesheet" type="text/css" href="__LIB__/color/htmleaf-demo.css">
+<link href="__LIB__/color/demo.css" rel="stylesheet" /> 
+<link href="__LIB__/color/evol-colorpicker.min.css" rel="stylesheet" />
+<style>
+		div.evo-cp-wrap{
+			width:100% !important;
+		}
+		div.evo-cp-wrap input{ width: 50%; margin-left: 5px}
+.evo-colorind,.evo-colorind-ie, .evo-colorind-ff{ float: left; height: 29px;  width: 30px}
+		</style>
+		
+<div class="page-container">
+	{present name="info.banner_id"}
+	<form action="{:url('/hshadmin/Banner/edit')}" method="post" name="form" id="form">
+		<input type="hidden" name="banner_id" value="{:isset($info.banner_id)?$info.banner_id:''}">
+		{else /}
+		<form action="{:url('/hshadmin/Banner/add')}" method="post" name="form" id="form">
+			{/present}
+			<table class="table table-border table-bordered table-hover table-bg">
+
+				<tr class="text-c">
+					<td colspan="4">{present name="info.id"}修改{else/}添加{/present}Banner</td>
+				</tr>
+				<tr class="tr rt">
+					<td>属性：</td>
+					<td colspan="3" class="lt">
+						<div class="radio-box">
+							<input value="1" type="radio" id="radio-1" name="apptype">
+							<label for="radio-1">APP</label>
+						</div>
+						<div class="radio-box">
+							<input value="2" type="radio" id="radio-2" name="apptype" checked>
+							<label for="radio-2">小程序</label>
+						</div>
+					</td>
+				</tr>
+				<tr class="tr rt">
+					<td width="100">名称：</td>
+					<td colspan="3" class="lt">
+						<input type="text" name="ad_name" class='input-text'
+							value="{:isset($info.ad_name)?$info.ad_name:''}" datatype="*">
+
+					</td>
+				</tr>
+				<tr class="tr rt">
+					<td width="100">图像:</td>
+					<td colspan="3" class="lt">
+						<span class="btn-upload form-group">
+							<input class="input-text upload-url radius" type="text" name="image" id="img"
+								value="{:isset($info.image)?$info.image:''}"><a href="javascript:void(0);"
+								class="btn btn-primary radius" onclick="upImage('img')">
+								<span class="iconfont icon-yunduanshangchuan"></span> 浏览文件</a>
+						</span><br />
+						<span class="help-block">例：建议尺寸800*400或者2:1的图像</span>
+					</td>
+				</tr>
+				<tr class="tr rt">
+					<td width="100">图像位置:</td>
+					<td colspan="3" class="lt">
+						<span class="select-box">
+							<select class="select" size="1" name="pid" id="position">
+								<option>请选择一个图像位置</option>
+								{foreach $position as $row}
+								<option value="{$row.id}" {if isset($info)&&$row.id==$info.pid}selected{/if}>
+									{$row.name}</option> {/foreach} </select> </span> </td> </tr> <tr class="tr rt" style="display: none" id="bg_color">
+					<td width="100">背景颜色：</td>
+					<td colspan="3" class="lt">
+							<input type="text" name="bg_color" class='input-text hideButton'
+							value="{:isset($info.bg_color)?$info.bg_color:''}" >
+							<span class="help-block">说明：app首页banner的背景色</span>
+					</td>
+				</tr>
+				<tr class="tr rt">
+					<td width="100">URL:</td>
+					<td colspan="3" class="lt">
+						<input type="text" name="ad_link" value="{:isset($info.ad_link)?$info.ad_link:''}"
+							class='input-text' />
+						<span class="help-block">例：http://www.baidu.com</span>
+					</td>
+				</tr>
+
+				<tr class="tr rt" id="app_path" style="display:none">
+					<td width="100">App Path:</td>
+					<td colspan="3" class="lt">
+						<span class="select-box">
+							<select class="select" size="1">
+								<option>请选择一个App功能模块Path</option>
+								{foreach $app_path as $row}
+								<option value="{$row.path}">{$row.title}
+								</option>
+								{/foreach}
+							</select>
+						</span>
+						<span class="help-block">说明：APP Path是跳转到APP某功能模块。URL优先，如填写了URL APP
+							Path则不会生效,也可以手动填写其他Path</span>
+
+						<input type="text" name="app_link" value="{:isset($info.app_link)?$info.app_link:''}"
+							class='input-text' />
+
+					</td>
+				</tr>
+
+				<tr class="tr rt" id="mini_path" style="display:none">
+					<td width="100">MINI Path:</td>
+					<td colspan="3" class="lt">
+						<span class="select-box">
+							<select class="select" size="1">
+								<option>请选择一个小程序功能模块Path</option>
+								{foreach $mini_path as $row}
+								<option value="{$row.path}">{$row.title}
+								</option>
+								{/foreach}
+							</select>
+						</span>
+						<span class="help-block">说明：Mini Path是跳转到小程序某功能模块。URL优先，如填写了URL Mini
+							Path则不会生效,也可以手动填写其他Path</span>
+						<input type="text" name="mini_app_link"
+							value="{:isset($info.mini_app_link)?$info.mini_app_link:''}" class='input-text' />
+
+					</td>
+				</tr>
+				<tr class="tr rt">
+					<td width="100">开始时间:</td>
+					<td colspan="3" class="lt">
+						<input type="text" id="datepicker" name="start_time"
+							value="{:isset($info.start_time)?$info.start_time:''}" class='input-text' datatype="*" />
+					</td>
+				</tr>
+				<tr class="tr rt">
+					<td width="100">结束时间:</td>
+					<td colspan="3" class="lt">
+						<input type="text" id="datepicker2" name="end_time"
+							value="{:isset($info.end_time)?$info.end_time:''}" class='input-text' datatype="*" />
+					</td>
+				</tr>
+				<tr class="tr rt">
+					<td width="100">排序:</td>
+					<td colspan="3" class="lt">
+						<input type="text" name="displayorder" class='input-text'
+							value="{:isset($info.displayorder)?$info.displayorder:''}" datatype="*">
+						<span class="help-block">说明：序号越大越靠前</span>
+					</td>
+				</tr>
+
+				<tr class="tr rt">
+					<td>状态：</td>
+					<td colspan="3" class="lt">
+						<input type="radio" class="radio" value="1" name="status" id="status1" checked>
+						启用
+						<input type="radio" class="radio" value="0" name="status" id="status2">
+						关闭
+					</td>
+				</tr>
+
+
+				<tr class="tr lt">
+					<td colspan="4" class='text-c'>
+						{present name="info.banner_id"}
+						<input class='btn btn-primary radius' type="submit" name="dosubmit" value="修 改">
+						{else/}
+						<input class='btn btn-primary radius' type="submit" name="dosubmit" value="添 加">
+						{/present}
+						&nbsp;
+						<input class='btn btn-primary radius' type="button" onclick="layer_close()" value="返 回">
+					</td>
+				</tr>
+			</table>
+		</form>
+
+</div>
+
+<script>
+	$(function () {
+
+
+		$(".select").change(function () {
+			var path = $(this).val();
+			//;console.log($(this).val());
+			$(this).parent().parent().find('input').val(path);
+		});
+
+		$('input:radio[name="apptype"]').click(function () {
+			var checkValue = $('input:radio[name="apptype"]:checked').val();
+			//alert(checkValue);
+			if (checkValue == 1) {
+				$("#app_path").show();
+				$("#mini_path").hide();
+			}
+			if (checkValue == 2) {
+				$("#app_path").hide();
+				$("#mini_path").show();
+			}
+		});
+
+		$("#datepicker").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+		$("#datepicker2").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+	});
+</script>
+<script>
+	$(function () {
+		$("[name='status'][value='{$info.status ?? ''}']").attr("checked", true);
+		$("[name='apptype'][value='{$info.apptype ?? '1'}']").attr("checked", true);
+		if ($('input:radio[name="apptype"]:checked').val() == 1) {
+			$("#app_path").show();
+		}
+		if ($('input:radio[name="apptype"]:checked').val() == 2) {
+			$("#mini_path").show();
+		}
+
+		if ($('#position option:selected').val() == 1) {
+			$("#bg_color").show();
+		}
+
+		$("#position").change(function(){
+			if($(this).val()==1){
+				$("#bg_color").show();
+			}else{
+				$("#bg_color").hide();
+			}
+		}); 
+
+		$("#form").Validform({
+			tiptype: 2,
+			ajaxPost: true,
+			showAllError: true,
+			callback: function (ret) {
+				ajax_progress(ret);
+			}
+		});
+	})
+</script>
+<script type="text/plain" id="upload_ue"></script>
+<script type="text/javascript">
+	var url = "{:url('Ueditor/index')}";
+	var _editor;
+	var b = "";
+	$(function () {
+		//重新实例化一个编辑器，防止在上面的editor编辑器中显示上传的图片或者文件
+		_editor = UE.getEditor('upload_ue', { serverUrl: url });
+		_editor.ready(function (e) {
+			//设置编辑器不可用
+			_editor.setDisabled();
+			//隐藏编辑器，因为不会用到这个编辑器实例，所以要隐藏
+			_editor.hide();
+			//侦听图片上传
+			_editor.addListener('beforeInsertImage', function (t, arg) {
+				//将地址赋值给相应的input,只去第一张图片的路径
+				$("#" + b).attr("value", arg[0].src);
+				console.log(arg);
+				//图片预览
+				//$("#preview").attr("src", arg[0].src);
+			})
+		});
+	});
+	//弹出图片上传的对话框
+	function upImage(id) {
+		var myImage = _editor.getDialog("insertimage");
+		myImage.open();
+		b = id;
+	}
+
+</script>
+
+
+<script src="__LIB__/color/evol-colorpicker.min.js" type="text/javascript"></script>
+<script>
+    // var i = 1;
+    $(function () {
+		intcolor();
+        function intcolor(){
+            $('.hideButton').colorpicker({
+            hideButton: false
+            });
+        }
+    })
+</script>
+</body>
+
+</html>

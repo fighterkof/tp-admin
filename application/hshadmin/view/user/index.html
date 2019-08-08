@@ -1,0 +1,151 @@
+{include file='pub/base' /}
+<div class="x-nav">
+	<span class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="">演示</a>
+		<a>
+		<cite>导航元素</cite></a>
+	</span>
+	<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+		<i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-body ">
+					<form class="layui-form layui-col-space5" method="post" action="{:url('index')}">
+						<div class="layui-inline layui-show-xs-block">
+							<input type="text" name="username"  placeholder="输入管理员名称" autocomplete="off" class="layui-input">
+						</div>
+						<div class="layui-inline layui-show-xs-block">
+							<button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+						</div>
+					</form>
+				</div>
+				<div class="layui-card-header">
+					<button class="layui-btn" onclick="xadmin.open('添加用户','{:url('add')}')"><i class="layui-icon"></i>添加</button>
+				</div>
+				<div class="layui-card-body ">
+					<table class="layui-table layui-form">
+						<thead>
+						<tr>
+							<th width="40">ID</th>
+							<th width="150">登录名</th>
+							<th width="90">手机</th>
+							<th width="150">邮箱</th>
+							<th>角色</th>
+							<th width="130">加入时间</th>
+							<th width="100">是否已启用</th>
+							<th width="150">操作</th>
+						</thead>
+						<tbody>
+						{volist name='list' id='k'}
+						<tr>
+							<td>{$k.id}</td>
+							<td>{$k.username}</td>
+							<td>{$k.tel}</td>
+							<td>{$k.mail}</td>
+							<td>{:get_rolename($k.role)}</td>
+							<td>{$k['add_time']|date='Y-m-d H:i'}</td>
+							<td class="td-status">
+							<span class="label {eq name='$k.status' value='1'}label-success{else/}label-default{/eq} radius">
+							{eq name='$k.status' value='1'}已启用{else/}已禁用{/eq}
+							</span></td>
+							<td class="td-manage">
+							{neq name='$k.id' value='1'}
+							<div class="layui-btn-group">
+								<button type="button" class="layui-btn" onclick="xadmin.open('修改管理员','{:url(\'edit\',[\'id\'=>$k.id])}')">修改</button>
+								{eq name='$k.status' value='1'}
+								<button type="button" class="layui-btn" onClick="admin_stop(this,{$k.id})">停用</button>
+								{else/}
+								<button type="button" class="layui-btn" onClick="admin_start(this,{$k.id})">启用</button>
+								{/eq}
+								<button type="button" class="layui-btn" onClick="admin_del(this,{$k.id})">删除</button>
+							</div>
+							</td>
+							{else/}
+								内置账号，无法操作
+							{/neq}
+						</tr>
+						{/volist}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> 
+<script type="text/javascript">
+
+/*管理员-删除*/
+function admin_del(obj,id){
+	layer.confirm('请确认删除？删除后关联业务会出问题，建议采用禁用！',function(index){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '{:url("del")}?id='+id+'',
+			dataType: 'json',
+			success: function(data){
+				console.log(data.code);
+				if(data.code==0){
+					$(obj).parents("tr").remove();
+				}
+				layer.msg('已删除!',{icon:1,time:1000});
+
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+	});
+}
+
+/*管理员-停用*/
+function admin_stop(obj,id){
+	layer.confirm('确认要停用吗？',function(index){
+		//此处请求后台程序，下方是成功后的前台处理……
+		$.ajax({
+			type: 'POST',
+			url: '{:url("change")}.?id='+id+'&status=0',
+			dataType: 'json',
+			success: function(data){
+				if(data.code==0){
+					$(obj).parents("tr").find(".td-manage").prepend('<button type="button" class="layui-btn" onClick="admin_start(this,{$k.id})">启用</button>');
+					$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">已禁用</span>');
+					$(obj).remove();
+					layer.msg('已停用!',{icon: 5,time:1000});
+					
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+}
+
+/*管理员-启用*/
+function admin_start(obj,id){
+	layer.confirm('确认要启用吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: '{:url("change")}.?id='+id+'&status=1',
+			dataType: 'json',
+			success: function(data){
+				if(data.code==0){
+				$(obj).parents("tr").find(".td-manage").prepend('<button type="button" class="layui-btn" onClick="admin_start(this,{$k.id})">停用</button>');
+				$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
+				$(obj).remove();
+				layer.msg('已启用!', {icon: 6,time:1000});
+			}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});	
+	});
+}
+</script>
+{include file='pub/footer'}

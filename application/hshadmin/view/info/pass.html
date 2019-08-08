@@ -1,0 +1,71 @@
+{include file='pub/base' /}
+<div class="layui-fluid">
+	<div class="layui-row">
+		<form class="layui-form">
+			<input type="hidden" name="id" value="{:isset($info.id)?$info.id:''}">
+			<div class="layui-form-item">
+				<label for="L_username" class="layui-form-label">
+					<span class="x-red">*</span>用户名</label>
+				<div class="layui-input-inline">
+					<input type="text" readonly autocomplete="off" class="layui-input"
+						value="{:isset($info.username)?$info.username:''}"></div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label">
+					<span class="x-red">*</span>密码</label>
+				<div class="layui-input-inline">
+					<input type="password" id="L_pass" name="password" required="" lay-verify="pass" autocomplete="off"
+						class="layui-input"></div>
+				<div class="layui-form-mid layui-word-aux">6到16个字符</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_repass" class="layui-form-label">
+					<span class="x-red">*</span>确认密码</label>
+				<div class="layui-input-inline">
+					<input type="password" id="L_repass" name="repassword" required="" lay-verify="repass"
+						autocomplete="off" class="layui-input"></div>
+			</div>
+			<div class="layui-form-item">
+				<label for="L_repass" class="layui-form-label"></label>
+				<button class="layui-btn" lay-filter="add" lay-submit="">增加</button></div>
+		</form>
+	</div>
+</div>
+<script>layui.use(['form', 'layer', 'jquery'],
+		function () {
+			$ = layui.jquery;
+			var form = layui.form,
+				layer = layui.layer;
+
+			//自定义验证规则
+			form.verify({
+				pass: [/(.+){6,12}$/, '密码必须6到12位'],
+				repass: function (value) {
+					if ($('#L_pass').val() != $('#L_repass').val()) {
+						return '两次密码不一致';
+					}
+				}
+			});
+
+			//监听提交
+			form.on('submit(add)',
+				function (data) {
+					//console.log(data);
+					//发异步，把数据提交给php
+					$.ajax({
+						type: 'post',
+						url: "{:url('pass')}",
+						data: data.field,
+						success: function (obj) {
+							if(obj.code=='0'){
+								layer.msg("修改成功,即将返回重新登录！");
+								xadmin.father_reload();
+							}else{
+								layer.msg(obj.msg);
+							}
+						}
+					});
+					return false;
+				});
+		});</script>
+{include file='pub/footer' /}

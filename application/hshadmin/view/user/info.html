@@ -1,0 +1,41 @@
+{include file='pub/base' /}
+<div class="page-container">
+		<body>
+			<table class="table table-border table-bordered table-hover table-bg">
+
+				<tr class="text-c">
+					<td colspan="4">查看个人资料</td>
+				</tr>
+
+				<tr class="tr rt">
+					<td width="100">用户名称：</td>
+					<td colspan="3" class="lt">{:isset($info.username)?$info.username:''}
+					</td>
+				</tr>
+				<tr class="tr rt">
+					<td width="100">手机电话：</td>
+					<td class="lt">{:isset($info.tel)?$info.tel:''}
+					</td>
+					<td width="100">电子邮箱：</td>
+					<td class="lt">{:isset($info.mail)?$info.mail:''}
+					</td>
+				</tr>
+				<tr class="tr rt">
+					<td width="100">用户角色：</td>
+					<td  class="lt">{:get_rolename($info.role)}
+						
+					</td>
+					<td >用户状态：</td>
+					<td  class="lt">{eq name='$info.status' value='1'}已启用{else/}关闭{/eq}
+					</td>
+				</tr>
+				<tr class="tr rt">
+					<td >备注说明：</td>
+					<td colspan="3" class="lt">{:isset($info.remark)?$info.remark:''}
+					</td>
+				</tr>
+</table>
+</form>
+</div>
+</body>
+</html>

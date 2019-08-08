@@ -1,0 +1,133 @@
+{include file='pub/base' /}
+<div class="x-nav">
+	<span class="layui-breadcrumb">
+	  <a href="">首页</a>
+	  <a href="">演示</a>
+	  <a>
+		<cite>导航元素</cite></a>
+	</span>
+	<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+	  <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div class="layui-card-body ">
+					<form class="layui-form layui-col-space5" method="post" action="{:url('parent')}">
+						<div class="layui-inline layui-show-xs-block">
+							<input type="text" name="keyword"  placeholder="请输入手机号" autocomplete="off" class="layui-input">
+						</div>
+						<div class="layui-inline layui-show-xs-block">
+							<button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+						</div>
+					</form>
+				</div>
+				<div class="layui-card-body ">
+					<table class="layui-table layui-form">
+					  <thead>
+						<tr>
+							<th width="40">ID</th>
+							<th width="150">姓名</th>
+							<th width="150">电话</th>
+							<th width="100">添加时间</th>
+							<th width="150">操作</th>
+					  </thead>
+					  <tbody class="x-cate">
+						{volist name='list' id='k'}
+							<tr parent-id='{$k.parent_id}' fid='0'>
+								<td><i class="layui-icon x-show" status='true'>&#xe623;</i>{$k.parent_id}</td>
+                                <td>{$k.parent_name}</td>
+                                <td>{$k.phone}</td>
+								<td>{$k['createtime']|date='Y-m-d H:i'}</td>
+								<td class="td-manage">
+									<div class="btn-group">
+										<button type="button" class="layui-btn" onclick="xadmin.open('添加成员','{:url(\'studentadd\',[\'parent_id\'=>$k.parent_id])}',1050,800,true)">添加成员</button>
+										<button type="button" class="layui-btn" onClick="admin_del(this,{$k.parent_id})">删除</button>
+									</div>
+								</td>
+
+							</tr>
+							{volist name="$k.student" id="vo"}
+								<tr parent-id='{$vo.student_id}2' fid='{$vo.parent_id}'>
+									<td>&nbsp;&nbsp;&nbsp;&nbsp;
+										├{$vo.student_id}</td>
+									<td colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;
+										├{$vo.student_name}</td>
+									<td class="td-manage">
+										<button style="background-color:darkorange" type="button" class="layui-btn" onclick="xadmin.open('添加成员','{:url(\'studentadd\',[\'parent_id\'=>$k.parent_id])}',1050,800,true)">添加课程</button>
+									</td>
+								</tr>
+							{/volist}
+						{/volist}
+					  </tbody>
+					</table>
+				</div>
+				<div class="page">{$page|raw}</div>
+			</div>
+		</div>
+	</div>
+</div> 
+
+<script type="text/javascript">
+
+	/*管理员-删除*/
+	function admin_del(obj, id) {
+		layer.confirm('请确认删除?', function (index) {
+
+			$.ajax({
+				type: 'POST',
+				url: '{:url("parent_del")}?parent_id=' + id + '',
+				dataType: 'json',
+				success: function (data) {
+					if (data.code == 0) {
+						$(obj).parents("tr").remove();
+					}
+					layer.msg(data.msg, { icon: 1, time: 2000 });
+				},
+				error: function (data) {
+					console.log(data.msg);
+				},
+			});
+
+		});
+	}
+
+// 分类展开收起的分类的逻辑
+// 
+$(function(){
+	$("tbody.x-cate tr[fid!='0']").hide();
+	// 栏目多级显示效果
+	$('.x-show').click(function () {
+		if($(this).attr('status')=='true'){
+			$(this).html('&#xe625;'); 
+			$(this).attr('status','false');
+			ParentId = $(this).parents('tr').attr('parent-id');
+			$("tbody tr[fid="+ParentId+"]").show();
+		}else{
+			ParentIds = [];
+			$(this).html('&#xe623;');
+			$(this).attr('status','true');
+			ParentId = $(this).parents('tr').attr('parent-id');
+			getParentId(ParentId);
+			for (var i in ParentIds) {
+				$("tbody tr[parent-id="+ParentIds[i]+"]").hide().find('.x-show').html('&#xe623;').attr('status','true');
+			}
+		}
+	})
+})
+
+var ParentIds = [];
+function getParentId(ParentId) {
+	$("tbody tr[fid="+ParentId+"]").each(function(index, el) {
+		id = $(el).attr('parent-id');
+		ParentIds.push(id);
+		getParentId(id);
+	});
+}
+   
+
+</script>
+</body>
+
+</html>

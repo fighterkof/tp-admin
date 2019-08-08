@@ -1,0 +1,120 @@
+.navbar-wrapper {
+    height: 50px;
+}
+.navbar .logo {
+    height: 50px;
+    line-height: 50px;
+    margin-right: 10px;
+    float: left; padding-bottom: 5px;
+}
+.navbar-nav>ul>li, .navbar-nav>ul>li>a {
+    line-height: 56px;
+    font-size: 14px;
+}
+
+.container-fluid {
+   
+}
+.Hui-article-box {
+    top: 60px;
+}
+.Hui-aside {
+    background-color: rgb(255,255,255);
+    border-right: 1px solid #e5e5e5;
+}
+.Hui-tabNav {
+    height: 35px;
+    padding-right: 75px;
+    overflow: hidden;
+    position: relative;
+    background-color: #FFF;
+    background-repeat: repeat-x;
+    background-position: 0 -175px;
+}
+.navbar {
+    background: #FFF; box-shadow: 0px 0px 5px 0px #999;
+}
+.Hui-aside {
+    top: 60px; padding-top:0;
+}
+.navbar-nav > ul > li, .navbar-nav > ul > li > a {
+    color: #333;
+}
+.nav>ul>li>a:hover, .nav>ul>li.current>a {
+    background-color:#99ccff;
+    text-decoration: none;
+    -webkit-transition: background-color .3s ease 0s;
+    -moz-transition: background-color .3s ease 0s;
+    -o-transition: background-color .3s ease 0s;
+    -ms-transition: background-color .3s ease 0s;
+    transition: background-color .3s ease 0s; color:#FFF;
+}
+
+.Hui-aside .menu_dropdown dt {
+    border-bottom: none;
+    border-top: 1px solid #e5e5e5;
+}
+.Hui-aside {
+    top: 93px;
+}
+.Hui-aside .menu_dropdown dt {
+    line-height: 45px;
+
+}
+.admin_>ul>li>a:hover, .admin_>ul>li.current>a {
+    color: #333
+}
+
+/*分页*/
+.page{ padding: 20px 0}
+.pagination {}
+.pagination li {display: inline-block;margin-right: -1px;padding: 5px;border: 1px solid #e2e2e2;min-width: 20px;text-align: center;}
+.pagination li.active {background: #009688;color: #fff;border: 1px solid #009688;}
+.pagination li a {display: block;text-align: center;}
+.sx_right{ text-align: right;}
+.search_box{border: 1px solid #ddd; padding: 20px 0;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); overflow: hidden}
+.search_box .row{ padding: 10px 0; overflow: hidden}
+.docs-example2 {
+    position: relative;
+    *position: static;
+    *padding-top: 19px;
+    margin: 15px 0;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+._sx{ padding: 10px 0;}
+.help-block {
+    color: #98999a;
+    font-size: 12px;
+    padding: 10px 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    display: inline-block;
+}
+.ui-datepicker-calendar .ui-state-highlight {
+    height: auto;
+    margin-top: 0; 
+    border: 1px solid #fcefa1;
+    background: #fbf9ee;
+    color: #363636;
+}
+.ui-widget-header {
+    background: #e9e9e9;
+    color: #333333;
+    font-weight: bold;
+    border: none !important;
+    border-bottom: 1px solid #ddd !important;
+    padding: 0 !important;
+    margin: 2em 1.3em 0 1.3em !important;
+}
+.ui-tabs .ui-tabs-panel {
+
+    padding: 0 1.4em 1em 1.4em !important;
+
+}
+.submit_box{ padding: 10px 0; text-align: center}
+a.upload_model{ margin: 0 5px !important}
+.admin_logo img{ width: 100%}
+a.logo img{ height: 100% !important; width: auto !important;}

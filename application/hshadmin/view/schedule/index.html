@@ -1,0 +1,145 @@
+{include file='pub/base' /}
+<link href='__STATIC__/xadmin/lib/fullcalendar/packages/core/main.css' rel='stylesheet' />
+<link href='__STATIC__/xadmin/lib/fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
+<script src='__STATIC__/xadmin/lib/fullcalendar/packages/core/main.js'></script>
+<script src='__STATIC__/xadmin/lib/fullcalendar/packages/interaction/main.js'></script>
+<script src='__STATIC__/xadmin/lib/fullcalendar/packages/daygrid/main.js'></script>
+<script>
+
+		document.addEventListener('DOMContentLoaded', function() {
+		  var calendarEl = document.getElementById('calendar');
+	  
+		  var calendar = new FullCalendar.Calendar(calendarEl, {
+			plugins: [ 'interaction', 'dayGrid', 'timeGrid', 'list' ],
+			header: {
+			  left: 'prev,next today',
+			  center: 'title',
+			  right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+			},
+			defaultDate: '2019-06-12',
+			navLinks: true, // can click day/week names to navigate views
+			businessHours: true, // display business hours
+			editable: true,
+			events: [
+			  {
+				title: 'Business Lunch',
+				start: '2019-06-03T13:00:00',
+				constraint: 'businessHours'
+			  },
+			  {
+				title: 'Meeting',
+				start: '2019-06-13T11:00:00',
+				constraint: 'availableForMeeting', // defined below
+				color: '#257e4a'
+			  },
+			  {
+				title: 'Conference',
+				start: '2019-06-18',
+				end: '2019-06-20'
+			  },
+			  {
+				title: 'Party',
+				start: '2019-06-29T20:00:00'
+			  },
+	  
+			  // areas where "Meeting" must be dropped
+			  {
+				groupId: 'availableForMeeting',
+				start: '2019-06-11T10:00:00',
+				end: '2019-06-11T16:00:00',
+				rendering: 'background'
+			  },
+			  {
+				groupId: 'availableForMeeting',
+				start: '2019-06-13T10:00:00',
+				end: '2019-06-13T16:00:00',
+				rendering: 'background'
+			  },
+	  
+			  // red areas where no events can be dropped
+			  {
+				start: '2019-06-24',
+				end: '2019-06-28',
+				overlap: false,
+				rendering: 'background',
+				color: '#ff9f89'
+			  },
+			  {
+				start: '2019-06-06',
+				end: '2019-06-08',
+				overlap: false,
+				rendering: 'background',
+				color: '#ff9f89'
+			  }
+			]
+		  });
+	  
+		  calendar.render();
+		});
+	  
+	  </script>
+<style>
+
+		body {
+		  margin: 40px 10px;
+		  padding: 0;
+		  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+		  font-size: 14px;
+		}
+	  
+		#calendar {
+		  max-width: 900px;
+		  margin: 0 auto;
+		}
+	  
+	  </style>
+<div class="x-nav">
+	<span class="layui-breadcrumb">
+	  <a href="">首页</a>
+	  <a href="">课室管理</a>
+	  <a>
+		<cite>课室列表</cite></a>
+	</span>
+	<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+	  <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+<div class="layui-fluid">
+	<div class="layui-row layui-col-space15">
+		<div class="layui-col-md12">
+			<div class="layui-card">
+				<div id='calendar'></div>
+			</div>
+		</div>
+	</div>
+</div> 
+
+<script type="text/javascript">
+
+	/*管理员-删除*/
+	function admin_del(obj, id) {
+		layer.confirm('请确认删除?', function (index) {
+
+			$.ajax({
+				type: 'POST',
+				url: '{:url("delete")}?id=' + id + '',
+				dataType: 'json',
+				success: function (data) {
+					if (data.code == 0) {
+						$(obj).parents("tr").remove();
+					}
+					layer.msg(data.msg, { icon: 1, time: 2000 });
+				},
+				error: function (data) {
+					console.log(data.msg);
+				},
+			});
+
+		});
+	}
+
+
+
+</script>
+</body>
+
+</html>
