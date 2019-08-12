@@ -54,6 +54,8 @@ class Index extends Admin
         //echo '<pre>';
         //print_r($main_menu);
         //exit;
+        $this->assign('admin_id', 'admin');
+
         $this->assign('main_menu', $main_menu);
 
         return $this->fetch();

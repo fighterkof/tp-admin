@@ -6,13 +6,13 @@ return [
     // 数据库类型
     'type' => 'mysql',
     // 服务器地址
-    'hostname' => '127.0.0.1',
+    'hostname' => '192.168.1.55',
     // 数据库名
     'database' => 'hsh_xcx',
     // 用户名
-    'username' => 'root',
+    'username' => 'ming',
     // 密码
-    'password' => 'root',
+    'password' => 'ming',
     // 端口
     'hostport' => '3306',
     // 连接dsn

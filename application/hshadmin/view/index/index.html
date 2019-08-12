@@ -25,14 +25,14 @@
         <link rel="stylesheet" href="__STATIC__/lib/jquery-toast-plugin-master/dist/jquery.toast.min.css">
         <script type="text/javascript" src="__STATIC__/lib/jquery-toast-plugin-master/dist/jquery.toast.min.js"></script>
         <script>
-            function show(){
+            function showmsg(msg){
             $.toast({
-                text: "Don't forget to star the repository if you like it.", // Text that is to be shown in the toast
-                heading: 'Note', // Optional heading to be shown on the toast
+                text: msg.content, // Text that is to be shown in the toast
+                heading: msg.name, // Optional heading to be shown on the toast
                 
                 showHideTransition: 'fade', // fade, slide or plain
                 allowToastClose: true, // Boolean value true or false
-                hideAfter: 3000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+                hideAfter: 5000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
                 stack: 10, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
                 position: 'bottom-right', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
                 
@@ -49,7 +49,7 @@
         }
         </script>
     </head>
-    <body class="index">
+    <body class="index" onload="connect();">
         <!-- 顶部开始 -->
         <div class="container">
             <div class="logo">
@@ -118,5 +118,45 @@
         <!-- 右侧主体结束 -->
         <!-- 中部结束 -->
     </body>
-
+	<script>
+            var fromid='{$admin_id}';
+            var toid='{$admin_id}';
+            function connect() {
+                // 创建websocket
+                ws = new WebSocket("ws://127.0.0.1:1234");
+                // 当socket连接打开时，发送心跳到服务器
+                ws.onopen = onopen;
+                // 当有消息时根据消息类型显示不同信息
+                ws.onmessage = onmessage;
+                ws.onclose = function () {
+                    console.log("连接关闭");
+                    //connect();
+                };
+                ws.onerror = function () {
+                    console.log("出现错误");
+                };
+            }
+            function onopen() {
+    
+                var bild = '{"type":"bind","fromid":"'+fromid+'"}';
+                ws.send(bild);
+                setInterval(show, 10000);
+            }
+            function show() {
+                //ws.send('{"type":"pong"}');
+                
+            }
+            function onmessage(e) {
+                
+                var message = eval("(" + e.data + ")");
+                showmsg(message);
+                console.log(message);
+                
+            }
+    
+            function tomsg(){
+                var data = '{"type":"sayto","msg":"总有刁民想害朕","fromid":"'+fromid+'","toid":"'+toid+'"}';
+                ws.send(data);
+            }
+        </script>
 </html>
