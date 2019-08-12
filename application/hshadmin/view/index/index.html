@@ -2,7 +2,7 @@
 <html class="x-admin-sm">
     <head>
         <meta charset="UTF-8">
-        <title>斑奇小程序</title>
+        <title>后台管理系统</title>
         <meta name="renderer" content="webkit|ie-comp|ie-stand">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
@@ -21,12 +21,39 @@
             // 是否开启刷新记忆tab功能
             // var is_remember = false;
         </script>
+        <script src="__STATIC__/lib/jquery/1.9.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="__STATIC__/lib/jquery-toast-plugin-master/dist/jquery.toast.min.css">
+        <script type="text/javascript" src="__STATIC__/lib/jquery-toast-plugin-master/dist/jquery.toast.min.js"></script>
+        <script>
+            function show(){
+            $.toast({
+                text: "Don't forget to star the repository if you like it.", // Text that is to be shown in the toast
+                heading: 'Note', // Optional heading to be shown on the toast
+                
+                showHideTransition: 'fade', // fade, slide or plain
+                allowToastClose: true, // Boolean value true or false
+                hideAfter: 3000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+                stack: 10, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+                position: 'bottom-right', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+                
+                bgColor: '#0cafd8',  // Background color of the toast
+                textColor: '#eeeeee',  // Text color of the toast
+                textAlign: 'left',  // Text alignment i.e. left, right or center
+                loader: true,  // Whether to show loader or not. True by default
+                loaderBg: '#c00538',  // Background color of the toast loader
+                beforeShow: function () {}, // will be triggered before the toast is shown
+                afterShown: function () {}, // will be triggered after the toat has been shown
+                beforeHide: function () {}, // will be triggered before the toast gets hidden
+                afterHidden: function () {}  // will be triggered after the toast has been hidden
+            });
+        }
+        </script>
     </head>
     <body class="index">
         <!-- 顶部开始 -->
         <div class="container">
             <div class="logo">
-                <a href="./index.html">斑奇小程序</a></div>
+                <a href="javascript:void(0)" onclick="show()">后台管理系统</a></div>
             <div class="left_open">
                 <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
             </div>

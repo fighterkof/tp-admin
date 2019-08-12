@@ -4,8 +4,8 @@
 
 return [
     // 应用调试模式
-    'app_test' => true, //是否本地测试环境
-    'app_test_url' => 'http://192.168.5.249/xcx/public',
+    'app_test' => false, //是否本地测试环境
+    'app_test_url' => 'http://127.0.0.1/xcx/public',
 
     'app_debug' => true,
     // 应用Trace
