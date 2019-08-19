@@ -21,6 +21,7 @@ class Banner extends Admin
             $map[] = ['ad_name', 'like', '%' . $keyword . '%'];
         }
 
+        $aaaa='bbb';
         $list = db('banner')->where($map)->order(['displayorder' => 'desc', 'banner_id' => 'desc'])->paginate($pagenumber, false, ['query' => request()->param()]);
 
         $page = $list->render();
