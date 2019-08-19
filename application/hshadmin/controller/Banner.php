@@ -22,6 +22,7 @@ class Banner extends Admin
         }
 
         $aaaa='bbb';
+        $bbbb='ttt';
         $list = db('banner')->where($map)->order(['displayorder' => 'desc', 'banner_id' => 'desc'])->paginate($pagenumber, false, ['query' => request()->param()]);
 
         $page = $list->render();
